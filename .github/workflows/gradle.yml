@@ -3,6 +3,7 @@ name: Java CI with Gradle
 on: [push, pull_request]
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
@@ -23,7 +24,8 @@ jobs:
         # обязательно должен быть для запуска SUT в CI
         run: java -jar ./artifacts/app-card-delivery.jar &
       - name: Build with Gradle
+
         # Запускаем автотесты
         # Для проектов на базе Selenide необходимо добавить параметр для запуска браузера
         # в headless режиме -Dselenide.headless=true, параметр --info должен остаться
-        run: ./gradlew test --info
+        run: ./gradlew test --info -Dselenide.headless=true
