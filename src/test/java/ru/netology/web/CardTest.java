@@ -19,30 +19,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CardTest {
 
-    public String generateDate(int days, String pattern){
+    public String generateDate(int days, String pattern) {
         return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern(pattern));
     }
 
     @Test
     void firstPositiveTest() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москва");
         $("[data-test-id='date'] input")
                 .press(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE)
-                        .setValue(planDate);
+                .setValue(planDate);
         $("[data-test-id='name'] input").setValue("Иванов Иван");
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
         $(Selectors.withText("Успешно!")).should(Condition.visible, Duration.ofSeconds(15));
-        String actual = $("[data-test-id='notification'] .notification__content").text();
-        assertEquals("Встреча успешно забронирована на "+ planDate, actual.trim());
+        $("[data-test-id='notification'] .notification__content").should(Condition.text("Встреча успешно забронирована на " + planDate)).should(Condition.visible);
     }
 
     @Test
     void negativeCityTest() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='date'] input")
                 .press(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE)
@@ -51,13 +50,12 @@ public class CardTest {
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='city'] .input__sub").text();
-        assertEquals("Поле обязательно для заполнения", actual.trim());
+        $("[data-test-id='city'] .input__sub").should(Condition.text("Поле обязательно для заполнения")).should(Condition.visible);
     }
 
     @Test
     void negativeCityTest2() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москваaaaa");
         $("[data-test-id='date'] input")
@@ -67,8 +65,7 @@ public class CardTest {
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='city'] .input__sub").text();
-        assertEquals("Доставка в выбранный город недоступна", actual.trim());
+        $("[data-test-id='city'] .input__sub").should(Condition.text("Доставка в выбранный город недоступна")).should(Condition.visible);
     }
 
     @Test
@@ -81,13 +78,12 @@ public class CardTest {
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='date'] .input__inner .input__sub").text();
-        assertEquals("Неверно введена дата", actual.trim());
+        $("[data-test-id='date'] .input__inner .input__sub").should(Condition.text("Неверно введена дата")).should(Condition.visible);
     }
 
     @Test
     void negativeNameTest() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москва");
         $("[data-test-id='date'] input")
@@ -96,13 +92,13 @@ public class CardTest {
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='name'] .input__sub").text();
-        assertEquals("Поле обязательно для заполнения", actual.trim());
+        $("[data-test-id='name'] .input__sub").should(Condition.text("Поле обязательно для заполнения")).should(Condition.visible);
+
     }
 
     @Test
     void negativeNameTest2() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москва");
         $("[data-test-id='date'] input")
@@ -112,13 +108,13 @@ public class CardTest {
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='name'] .input__sub").text();
-        assertEquals("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.", actual.trim());
+        $("[data-test-id='name'] .input__sub").should(Condition.text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.")).should(Condition.visible);
+
     }
 
     @Test
     void negativePhoneTest() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москва");
         $("[data-test-id='date'] input")
@@ -127,13 +123,13 @@ public class CardTest {
         $("[data-test-id='name'] input").setValue("М М---М");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='phone'] .input__sub").text();
-        assertEquals("Поле обязательно для заполнения", actual.trim());
+        $("[data-test-id='phone'] .input__sub").should(Condition.text("Поле обязательно для заполнения")).should(Condition.visible);
+
     }
 
     @Test
     void negativePhoneTest2() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москва");
         $("[data-test-id='date'] input")
@@ -143,13 +139,12 @@ public class CardTest {
         $("[data-test-id='phone'] input").setValue("79111+111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
-        String actual = $("[data-test-id='phone'] .input__sub").text();
-        assertEquals("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.", actual.trim());
+        $("[data-test-id='phone'] .input__sub").should(Condition.text("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.")).should(Condition.visible);
     }
 
     @Test
     void negativeCheckTest() {
-        String planDate = generateDate(4,"dd.MM.yyyy");
+        String planDate = generateDate(4, "dd.MM.yyyy");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Москва");
         $("[data-test-id='date'] input")
@@ -158,30 +153,26 @@ public class CardTest {
         $("[data-test-id='name'] input").setValue("М ---М");
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $$("button").find(text("Забронировать")).click();
-        boolean actual = $(".input_invalid").isDisplayed();
-        assertTrue(actual);
+        $(".input_invalid").should(Condition.visible);
     }
 
     @Test
     void firstPositiveTestForElements() {
         int days = 30;
-        String planDate = generateDate(days,"d");
+        String planDate = generateDate(days, "d");
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Каз");
         $$(".menu-item__control").findBy(text("Владикавказ")).click();
-        $("[data-test-id='date'] input")
-                .press(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
-        if(!(LocalDate.now().format(DateTimeFormatter.ofPattern("MM"))==LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("MM")))){
+        $("[data-test-id='date'] input").click();
+        if (!(generateDate(3, "MM") == generateDate(days, "MM"))) {
             $(".calendar__title>[data-step='1']").click();
         }
-        $(".input__icon button").click();
         $$("tbody td").findBy(text(planDate)).click();
         $("[data-test-id='name'] input").setValue("Иванов Иван");
         $("[data-test-id='phone'] input").setValue("+79111111111");
         $("[data-test-id='agreement'] span").click();
         $$("button").find(text("Забронировать")).click();
         $(Selectors.withText("Успешно!")).should(Condition.visible, Duration.ofSeconds(15));
-        String actual = $("[data-test-id='notification'] .notification__content").text();
-        assertEquals("Встреча успешно забронирована на "+ generateDate(days,"dd.MM.yyyy"), actual.trim());
+        $("[data-test-id='notification'] .notification__content").should(Condition.text("Встреча успешно забронирована на " + generateDate(days, "dd.MM.yyyy"))).should(Condition.visible);
     }
 }
